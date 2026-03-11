@@ -3,350 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Pinnacle Bookkeeping Client Portal — Secure login for existing clients to upload and manage financial documents.">
-  <title>Client Portal Login — Pinnacle Bookkeeping Services Ltd.</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta name="description" content="Sign in to Pinnacle Bookkeeping Client Portal — Securely access your documents and bookkeeping dashboard.">
+  <title>Sign In — Pinnacle Bookkeeping Portal</title>
+  <link rel="stylesheet" href="css/portal.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { background: var(--navy-deep); }
-
-    .portal-page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Minimal nav for portal */
-    .portal-nav {
-      background: rgba(12,31,66,0.8);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .portal-main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 1rem;
-      position: relative;
-    }
-
-    /* Background decoration */
-    .portal-main::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 60% 60% at 30% 30%, rgba(74,114,184,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(74,114,184,0.08) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    .portal-container {
-      width: 100%;
-      max-width: 440px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .portal-header { text-align: center; margin-bottom: 2rem; }
-    .portal-header .logo-wrap {
-      display: inline-flex; align-items: center; gap: 10px;
-      margin-bottom: 1.5rem; text-decoration: none;
-    }
-    .portal-header h1 {
-      font-size: 1.75rem; color: var(--white); margin-bottom: 0.4rem;
-    }
-    .portal-header p {
-      font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.6;
-    }
-
-    .portal-card {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem 2.25rem;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
-    }
-
-    .portal-card-header {
-      margin-bottom: 1.75rem;
-    }
-    .portal-card-header h2 {
-      font-size: 1.3rem; margin-bottom: 0.25rem;
-    }
-    .portal-card-header p {
-      font-size: 0.84rem; color: var(--muted);
-    }
-
-    .login-fields { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 1.5rem; }
-    .login-field { display: flex; flex-direction: column; gap: 0.35rem; }
-    .login-field label {
-      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--navy);
-    }
-    .login-field input {
-      padding: 0.85rem 1rem; border: 2px solid var(--border); border-radius: 8px;
-      font-family: var(--font-body); font-size: 0.93rem; color: var(--text);
-      background: var(--white); outline: none; transition: border-color 0.2s; width: 100%;
-    }
-    .login-field input:focus { border-color: var(--blue); }
-    .login-field.password-wrap { position: relative; }
-    .login-field.password-wrap input { padding-right: 3rem; }
-    .toggle-pw {
-      position: absolute; right: 0.75rem; bottom: 0.85rem;
-      background: none; border: none; font-size: 1rem; cursor: pointer;
-      color: var(--muted); padding: 0; line-height: 1;
-    }
-    .toggle-pw:hover { color: var(--navy); }
-
-    .login-options {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.5rem; font-size: 0.82rem;
-    }
-    .remember-wrap { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); cursor: pointer; }
-    .remember-wrap input { width: 15px; height: 15px; cursor: pointer; accent-color: var(--navy); }
-    .forgot-link { color: var(--blue); font-weight: 700; transition: color 0.2s; }
-    .forgot-link:hover { color: var(--navy); }
-
-    .login-btn {
-      width: 100%; padding: 1rem; background: var(--navy); color: var(--white);
-      border: none; border-radius: 10px; font-family: var(--font-body);
-      font-size: 0.95rem; font-weight: 800; cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    }
-    .login-btn:hover { background: var(--navy-dark); transform: translateY(-1px); }
-
-    .portal-divider {
-      display: flex; align-items: center; gap: 1rem;
-      margin: 1.5rem 0; font-size: 0.78rem; color: var(--muted);
-    }
-    .portal-divider::before, .portal-divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
-    }
-
-    .alt-access {
-      display: flex; flex-direction: column; gap: 0.65rem;
-    }
-    .alt-btn {
-      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
-      padding: 0.85rem; border: 1.5px solid var(--border); border-radius: 8px;
-      font-family: var(--font-body); font-size: 0.87rem; font-weight: 700;
-      color: var(--text-md); background: var(--white); cursor: pointer;
-      transition: all 0.2s; text-decoration: none;
-    }
-    .alt-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--sky); }
-
-    .portal-footer-note {
-      text-align: center; margin-top: 1.75rem;
-      font-size: 0.8rem; color: rgba(255,255,255,0.35); line-height: 1.65;
-    }
-    .portal-footer-note a { color: rgba(255,255,255,0.5); text-decoration: underline; }
-    .portal-footer-note a:hover { color: rgba(255,255,255,0.8); }
-
-    /* Not-a-client nudge */
-    .not-client-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-lg); padding: 1.5rem;
-      text-align: center; margin-top: 1.5rem;
-    }
-    .not-client-box p {
-      font-size: 0.84rem; color: rgba(255,255,255,0.45); margin-bottom: 1rem; line-height: 1.6;
-    }
-    .not-client-box strong { color: rgba(255,255,255,0.7); }
-
-    /* Error state */
-    .login-error {
-      background: #fef0ef; border: 1px solid #f5c2be; border-radius: 8px;
-      padding: 0.75rem 1rem; font-size: 0.84rem; color: var(--red);
-      font-weight: 600; display: none; margin-bottom: 1rem;
-    }
-    .login-error.show { display: block; }
-
-    /* Security badge */
-    .security-row {
-      display: flex; align-items: center; justify-content: center;
-      gap: 1.5rem; margin-top: 1.25rem; flex-wrap: wrap;
-    }
-    .sec-item {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.3);
-    }
-
-    footer {
-      background: transparent;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 1.25rem 1.5rem; text-align: center;
-      font-size: 0.75rem; color: rgba(255,255,255,0.25);
-    }
-    footer a { color: rgba(255,255,255,0.35); }
-
-    @media (max-width: 480px) {
-      .portal-card { padding: 1.75rem 1.25rem; }
-    }
-  </style>
 </head>
 <body>
 
-<div class="portal-page">
+<div class="login-page">
 
-  <!-- MINIMAL NAV -->
-  <div class="portal-nav">
-    <a href="index.html" class="nav-logo">
-      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none">
+  <!-- Minimal Nav -->
+  <div class="login-topbar">
+    <a href="index.html" class="sidebar-logo">
+      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none" style="width:32px; height:32px;">
         <rect width="36" height="36" rx="8" fill="#4A72B8"/>
         <polygon points="18,5 32,30 4,30" fill="white"/>
         <polygon points="4,30 32,30 28,23 10,28" fill="#4A72B8"/>
         <polygon points="14,30 32,30 29,25" fill="white"/>
       </svg>
-      <div class="nav-logo-text" style="color:white;">
+      <div class="sidebar-logo-text">
         Pinnacle Bookkeeping
-        <small style="color:rgba(255,255,255,0.35);">Services Ltd.</small>
+        <small>Services Ltd.</small>
       </div>
     </a>
     <div style="display:flex; align-items:center; gap:1rem;">
       <a href="client-portal.html" style="font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.45); transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portal Info</a>
-      <a href="contact.html" class="btn btn-outline-white btn-sm">Need Help?</a>
+      <a href="contact.html" style="font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.45); border:1px solid rgba(255,255,255,0.15); padding:0.4rem 0.9rem; border-radius:6px; transition:all 0.2s;" onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.35)'" onmouseout="this.style.color='rgba(255,255,255,0.45)';this.style.borderColor='rgba(255,255,255,0.15)'">Need Help?</a>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="portal-main">
-    <div class="portal-container">
+  <!-- Main Login Area -->
+  <div class="login-main">
+    <div style="width:100%; max-width:420px;">
 
-      <div class="portal-header">
-        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:99px; padding:0.35rem 1rem; font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.55); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.25rem;">
+      <!-- Header -->
+      <div style="text-align:center; margin-bottom:2rem;">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:99px; padding:0.35rem 1rem; font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1rem;">
           🔐 Secure Client Access
         </div>
-        <h1>Client Portal</h1>
-        <p>Sign in to securely access and upload your financial documents.</p>
+        <h1 style="font-family:var(--font-display); font-size:1.75rem; font-weight:700; color:white; margin-bottom:0.4rem;">Client Portal</h1>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.92rem;">Sign in to access your secure portal.</p>
       </div>
 
-      <div class="portal-card">
-        <div class="portal-card-header">
-          <h2>Welcome Back</h2>
-          <p>Enter your credentials to access your secure portal.</p>
+      <!-- LOGIN FORM -->
+      <div class="login-card" id="login-form-card">
+        <h2>Welcome Back</h2>
+        <p class="login-sub">Enter your credentials to continue.</p>
+
+        <!-- Error message -->
+        <div id="login-error" style="background:var(--red-bg); border:1px solid #f5c2be; border-radius:8px; padding:0.75rem 1rem; font-size:0.84rem; color:var(--red); font-weight:600; margin-bottom:1rem; display:none;"></div>
+
+        <!-- Success message -->
+        <div id="login-success" style="background:var(--green-bg); border:1px solid #b7e4c7; border-radius:8px; padding:0.75rem 1rem; font-size:0.84rem; color:#155724; font-weight:600; margin-bottom:1rem; display:none;"></div>
+
+        <div class="p-field">
+          <label class="p-label">Email Address</label>
+          <input type="email" class="p-input" id="login-email" placeholder="jane@yourbusiness.com" autocomplete="email">
         </div>
 
-        <div class="login-error" id="login-error">
-          Incorrect email or password. Please try again, or contact us at <a href="mailto:amitb.bkpg@gmail.com">amitb.bkpg@gmail.com</a>.
-        </div>
-
-        <form id="portal-login-form" novalidate>
-          <div class="login-fields">
-            <div class="login-field">
-              <label for="portal-email">Email Address</label>
-              <input type="email" id="portal-email" placeholder="jane@yourbusiness.com" autocomplete="email" required>
-            </div>
-            <div class="login-field password-wrap">
-              <label for="portal-password">Password</label>
-              <input type="password" id="portal-password" placeholder="••••••••••" autocomplete="current-password" required>
-              <button type="button" class="toggle-pw" id="toggle-pw" title="Show/hide password">👁</button>
-            </div>
+        <div class="p-field">
+          <label class="p-label">Password</label>
+          <div class="pw-field-wrap">
+            <input type="password" class="p-input" id="login-password" placeholder="••••••••" autocomplete="current-password">
+            <button class="pw-toggle" onclick="toggleLoginPw()">👁</button>
           </div>
+        </div>
 
-          <div class="login-options">
-            <label class="remember-wrap">
-              <input type="checkbox" id="remember-me"> Keep me signed in
-            </label>
-            <a href="#" class="forgot-link" onclick="showForgotMessage(event)">Forgot password?</a>
-          </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <label class="p-checkbox-row" style="font-size:0.82rem;">
+            <input type="checkbox" id="remember-me"> Keep me signed in
+          </label>
+          <a href="#" style="font-size:0.82rem; color:var(--blue); font-weight:600;" onclick="showForgotPassword(event)">Forgot password?</a>
+        </div>
 
-          <button type="submit" class="login-btn" id="login-btn">
-            🔐 Sign In to Portal
-          </button>
-        </form>
+        <button class="p-btn p-btn-primary p-btn-lg" style="width:100%;" id="login-btn" onclick="handleLogin()">
+          🔐 Sign In to Portal
+        </button>
+      </div>
 
-        <div class="portal-divider">or access via</div>
+      <!-- FORGOT PASSWORD FORM (hidden by default) -->
+      <div class="login-card" id="forgot-form-card" style="display:none;">
+        <h2>Reset Password</h2>
+        <p class="login-sub">Enter your email and we'll send you a reset link.</p>
 
-        <div class="alt-access">
-          <a href="https://qbo.intuit.com" target="_blank" rel="noopener" class="alt-btn">
-            <span style="font-size:1.1rem;">📊</span>
-            Sign in via QuickBooks Online
-          </a>
-          <a href="https://drive.google.com" target="_blank" rel="noopener" class="alt-btn">
-            <span style="font-size:1.1rem;">📁</span>
-            Access Shared Google Drive Folder
-          </a>
+        <div id="forgot-error" style="background:var(--red-bg); border:1px solid #f5c2be; border-radius:8px; padding:0.75rem 1rem; font-size:0.84rem; color:var(--red); font-weight:600; margin-bottom:1rem; display:none;"></div>
+
+        <div id="forgot-success" style="background:var(--green-bg); border:1px solid #b7e4c7; border-radius:8px; padding:0.75rem 1rem; font-size:0.84rem; color:#155724; font-weight:600; margin-bottom:1rem; display:none;"></div>
+
+        <div class="p-field">
+          <label class="p-label">Email Address</label>
+          <input type="email" class="p-input" id="forgot-email" placeholder="jane@yourbusiness.com" autocomplete="email">
+        </div>
+
+        <button class="p-btn p-btn-primary p-btn-lg" style="width:100%; margin-bottom:1rem;" onclick="handleForgotPassword()">
+          Send Reset Link
+        </button>
+
+        <div class="login-footer-text">
+          <a href="#" onclick="showLoginForm(event)">← Back to Sign In</a>
         </div>
       </div>
 
-      <div class="security-row">
-        <div class="sec-item">🔒 Encrypted &amp; Secure</div>
-        <div class="sec-item">🇨🇦 PIPEDA Compliant</div>
-        <div class="sec-item">🔑 Access Controlled</div>
+      <!-- Security badges -->
+      <div class="login-security">
+        <span>🔒 Encrypted & Secure</span>
+        <span>🇨🇦 PIPEDA Compliant</span>
+        <span>🔑 Access Controlled</span>
       </div>
 
-      <!-- NOT A CLIENT -->
-      <div class="not-client-box">
-        <p><strong>Not a client yet?</strong><br>Portal access is provided during onboarding. If you're interested in working with Pinnacle, start with a free quote.</p>
-        <a href="quote-calculator.html" class="btn btn-quote btn-sm" style="display:inline-flex;">Get a Free Quote →</a>
-      </div>
-
-      <div class="portal-footer-note">
-        Having trouble logging in?<br>
-        Contact us at <a href="mailto:amitb.bkpg@gmail.com">amitb.bkpg@gmail.com</a> or call <a href="tel:8073566173">(807) 356-6173</a>
+      <!-- Not a client -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius-lg); padding:1.25rem; text-align:center; margin-top:1.5rem;">
+        <p style="font-size:0.84rem; color:rgba(255,255,255,0.45); margin-bottom:0.75rem;">
+          <strong style="color:rgba(255,255,255,0.65);">Not a client yet?</strong><br>
+          Portal access is provided during onboarding.
+        </p>
+        <a href="quote-calculator.html" style="font-size:0.85rem; font-weight:700; color:var(--blue-light);">Get a Free Quote →</a>
       </div>
 
     </div>
   </div>
 
-  <footer>
-    © 2026 Pinnacle Bookkeeping Services Ltd. &nbsp;|&nbsp;
-    <a href="index.html">Home</a> &nbsp;|&nbsp;
-    <a href="contact.html">Contact</a> &nbsp;|&nbsp;
-    Thunder Bay, Ontario
+  <!-- Footer -->
+  <footer style="padding:1.25rem; text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.2); border-top:1px solid rgba(255,255,255,0.06);">
+    © 2026 Pinnacle Bookkeeping Services Ltd. — 1000362923 Ontario Inc.
   </footer>
 
 </div>
 
-<script src="js/script.js"></script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+
 <script>
-  // Toggle password visibility
-  var pwInput = document.getElementById('portal-password');
-  var toggleBtn = document.getElementById('toggle-pw');
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', function () {
-      var isText = pwInput.type === 'text';
-      pwInput.type = isText ? 'password' : 'text';
-      toggleBtn.textContent = isText ? '👁' : '🙈';
-    });
+  /* ── Initialize Firebase ── */
+  firebase.initializeApp(FIREBASE_CONFIG);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  /* ── Check if already logged in ── */
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // Already logged in — redirect to dashboard
+      window.location.href = 'portal-dashboard.html';
+    }
+  });
+
+  /* ── Persistence ── */
+  const rememberMe = document.getElementById('remember-me');
+
+  /* ── Login ── */
+  async function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const errorEl = document.getElementById('login-error');
+    const btn = document.getElementById('login-btn');
+
+    errorEl.style.display = 'none';
+
+    if (!email || !password) {
+      errorEl.textContent = 'Please enter your email and password.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner" style="width:18px; height:18px; border-width:2px;"></span> Signing in...';
+
+    try {
+      // Set persistence
+      const persistence = rememberMe.checked
+        ? firebase.auth.Auth.Persistence.LOCAL
+        : firebase.auth.Auth.Persistence.SESSION;
+      await auth.setPersistence(persistence);
+
+      // Sign in
+      const result = await auth.signInWithEmailAndPassword(email, password);
+
+      // Check if user exists in Firestore and is not disabled
+      const userDoc = await db.collection('users').doc(result.user.uid).get();
+      if (!userDoc.exists) {
+        await auth.signOut();
+        errorEl.textContent = 'Account not found in our system. Please contact Pinnacle.';
+        errorEl.style.display = 'block';
+        resetLoginBtn();
+        return;
+      }
+
+      if (userDoc.data().disabled) {
+        await auth.signOut();
+        errorEl.textContent = 'Your account has been disabled. Please contact Pinnacle.';
+        errorEl.style.display = 'block';
+        resetLoginBtn();
+        return;
+      }
+
+      // Success — redirect
+      window.location.href = 'portal-dashboard.html';
+
+    } catch (err) {
+      console.error('Login error:', err);
+      const messages = {
+        'auth/user-not-found': 'No account found with this email.',
+        'auth/wrong-password': 'Incorrect password. Please try again.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/too-many-requests': 'Too many attempts. Please wait and try again.',
+        'auth/invalid-credential': 'Incorrect email or password. Please try again.'
+      };
+      errorEl.textContent = messages[err.code] || 'Sign in failed. Please try again.';
+      errorEl.style.display = 'block';
+      resetLoginBtn();
+    }
   }
 
-  // Login form — demo handler (replace with real auth)
-  var loginForm = document.getElementById('portal-login-form');
-  var loginBtn = document.getElementById('login-btn');
-  if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var email = document.getElementById('portal-email').value.trim();
-      var password = document.getElementById('portal-password').value;
-      if (!email || !password) return;
-
-      loginBtn.textContent = 'Signing in…';
-      loginBtn.disabled = true;
-
-      // Simulate auth delay — replace this block with your actual auth logic
-      setTimeout(function () {
-        // For demo: show error (replace with real validation)
-        document.getElementById('login-error').classList.add('show');
-        loginBtn.textContent = '🔐 Sign In to Portal';
-        loginBtn.disabled = false;
-      }, 1200);
-    });
+  function resetLoginBtn() {
+    const btn = document.getElementById('login-btn');
+    btn.disabled = false;
+    btn.innerHTML = '🔐 Sign In to Portal';
   }
 
-  // Forgot password message
-  function showForgotMessage(e) {
+  /* ── Forgot Password ── */
+  function showForgotPassword(e) {
     e.preventDefault();
-    alert('To reset your password, please email amitb.bkpg@gmail.com or call (807) 356-6173 and we\'ll get you sorted right away.');
+    document.getElementById('login-form-card').style.display = 'none';
+    document.getElementById('forgot-form-card').style.display = 'block';
+    document.getElementById('forgot-error').style.display = 'none';
+    document.getElementById('forgot-success').style.display = 'none';
   }
+
+  function showLoginForm(e) {
+    e.preventDefault();
+    document.getElementById('forgot-form-card').style.display = 'none';
+    document.getElementById('login-form-card').style.display = 'block';
+  }
+
+  async function handleForgotPassword() {
+    const email = document.getElementById('forgot-email').value.trim();
+    const errorEl = document.getElementById('forgot-error');
+    const successEl = document.getElementById('forgot-success');
+
+    errorEl.style.display = 'none';
+    successEl.style.display = 'none';
+
+    if (!email) {
+      errorEl.textContent = 'Please enter your email address.';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    try {
+      await auth.sendPasswordResetEmail(email);
+      successEl.textContent = 'Password reset email sent! Check your inbox (and spam folder).';
+      successEl.style.display = 'block';
+    } catch (err) {
+      console.error('Forgot password error:', err);
+      if (err.code === 'auth/user-not-found') {
+        // Don't reveal if user exists — show generic message
+        successEl.textContent = 'If an account exists with this email, a reset link has been sent.';
+        successEl.style.display = 'block';
+      } else {
+        errorEl.textContent = 'Error sending reset email. Please try again.';
+        errorEl.style.display = 'block';
+      }
+    }
+  }
+
+  /* ── Password Toggle ── */
+  function toggleLoginPw() {
+    const input = document.getElementById('login-password');
+    const btn = input.nextElementSibling;
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🔒';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁';
+    }
+  }
+
+  /* ── Enter key support ── */
+  document.getElementById('login-password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+  document.getElementById('login-email').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('login-password').focus();
+  });
+  document.getElementById('forgot-email').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleForgotPassword();
+  });
 </script>
+
 </body>
 </html>
