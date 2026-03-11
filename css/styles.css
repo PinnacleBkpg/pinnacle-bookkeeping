@@ -352,6 +352,179 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.6);padding:72px 0 0}
 [data-reveal].revealed{opacity:1;transform:translateY(0)}
 
 /* ============================================================
+   MISSING COMPONENT DEFINITIONS
+   ============================================================ */
+
+/* ---- Nav Logo Image (new HTML) ---- */
+.nav-logo-img{height:40px;width:auto;flex-shrink:0;object-fit:contain}
+
+/* ---- Icon Box (universal icon container) ---- */
+.icon-box{
+  width:48px;height:48px;background:var(--sky);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.25rem;flex-shrink:0;
+  transition:background .25s var(--ease);
+}
+.icon-box svg{
+  width:24px;height:24px;fill:none;stroke:var(--navy);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.service-card:hover .icon-box,
+.benefit-item:hover .icon-box,
+.value-card:hover .icon-box{background:var(--sky-dark)}
+.industry-card .icon-box{
+  background:rgba(255,255,255,.08);margin:0 auto 1rem;
+  width:52px;height:52px;border-radius:14px;
+}
+.industry-card .icon-box svg{stroke:rgba(255,255,255,.7)}
+.industry-card:hover .icon-box{background:rgba(255,255,255,.15)}
+/* Benefits icon-box override */
+.benefit-item .icon-box{width:44px;height:44px;margin-bottom:0;border-radius:12px}
+
+/* ---- Split Visual Dark Variant ---- */
+.split-visual-dark{background:var(--navy-deep)}
+
+/* ---- Hero Dashboard Cards (glass) ---- */
+.glass-card{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:1.25rem 1.5rem;
+}
+.glass-card-sm{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:1rem;
+}
+.glass-card-gold{
+  background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);
+  border-radius:10px;padding:1rem;display:flex;align-items:center;gap:.75rem;
+}
+.dash-label{
+  font-size:.7rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.4rem;
+}
+.dash-value{
+  font-family:var(--font-display);font-size:2rem;font-weight:700;
+  color:white;line-height:1;
+}
+.dash-value-sm{
+  font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+  color:white;
+}
+.dash-sub{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:.25rem}
+
+/* ---- Cost Comparison Cards ---- */
+.cost-card{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.1rem 1.25rem;background:white;border-radius:12px;
+  box-shadow:var(--shadow-sm);border:1px solid var(--border);
+}
+.cost-card-info{display:flex;align-items:center;gap:.75rem}
+.cost-card-label{font-size:.78rem;font-weight:700;color:var(--navy)}
+.cost-card-sub{font-size:.72rem;color:var(--muted)}
+.cost-card-amount{font-family:var(--font-display);font-size:1.4rem;font-weight:700;white-space:nowrap}
+.cost-card-amount.red{color:var(--red)}
+.cost-card-amount.green{color:var(--green)}
+
+/* ---- Savings Card ---- */
+.savings-card{
+  background:var(--navy);border-radius:12px;padding:1.35rem;text-align:center;
+}
+.savings-label{
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.4rem;
+}
+.savings-amount{
+  font-family:var(--font-display);font-size:2rem;font-weight:700;
+  color:var(--gold);line-height:1;
+}
+.savings-sub{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:.3rem}
+
+/* ---- Serve Grid (Who We Serve) ---- */
+.serve-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.serve-card{
+  display:flex;gap:1rem;padding:1.35rem;background:white;
+  border-radius:var(--radius);border:1px solid var(--border);
+  transition:border-color .25s,box-shadow .25s;
+}
+.serve-card:hover{border-color:var(--blue-lt);box-shadow:var(--shadow-sm)}
+.serve-card .icon-box{margin-bottom:0;width:40px;height:40px;flex-shrink:0;border-radius:10px}
+.serve-card h4{font-size:.95rem;margin-bottom:.25rem}
+.serve-card p{font-size:.85rem;margin:0}
+
+/* ---- Value Card Dark Variant ---- */
+.value-card-dark{background:var(--navy-deep);border-color:rgba(255,255,255,.08)}
+.value-card-dark h3{color:white}
+.value-card-dark p{color:rgba(255,255,255,.55)}
+.value-card-dark:hover{border-color:rgba(255,255,255,.15)}
+.value-card-dark::after{display:none}
+
+/* ---- Callout Box ---- */
+.callout{
+  padding:1.5rem;background:var(--sky);border-radius:var(--radius-lg);
+  border-left:4px solid var(--navy);
+}
+.callout-dark{
+  padding:1.5rem;background:var(--navy-deep);border-radius:var(--radius-lg);
+  border-left:4px solid var(--gold);
+}
+.callout-text{
+  font-family:var(--font-display);font-size:1.1rem;
+  color:var(--navy);font-style:italic;line-height:1.6;
+}
+.callout-dark .callout-text{color:rgba(255,255,255,.7)}
+
+/* ---- Book Call Box & Quote CTA Box (Contact) ---- */
+.book-call-box{
+  padding:1.5rem;background:var(--sky);border-radius:var(--radius-lg);
+}
+.book-call-box h4{font-size:.95rem;margin-bottom:.5rem}
+.book-call-box p{font-size:.88rem;color:var(--muted);margin-bottom:1rem}
+.quote-cta-box{
+  margin-top:1.25rem;padding:1.5rem;background:var(--navy-deep);
+  border-radius:var(--radius-lg);
+}
+.quote-cta-box h4{color:white;font-size:.95rem;margin-bottom:.5rem}
+.quote-cta-box p{font-size:.88rem;color:rgba(255,255,255,.55);margin-bottom:1rem}
+
+/* ---- Security Box (Portal) ---- */
+.security-box{
+  background:var(--navy-deep);border-radius:var(--radius-xl);
+  padding:3rem;text-align:center;
+}
+.security-box h2{color:white;margin-bottom:.75rem}
+.security-box>p{color:rgba(255,255,255,.6);font-size:.95rem;line-height:1.75;margin-bottom:2rem}
+.security-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  text-align:center;margin-bottom:2rem;
+}
+.security-item-title{font-size:.85rem;font-weight:700;color:white;margin-bottom:.25rem}
+.security-item-desc{font-size:.78rem;color:rgba(255,255,255,.45)}
+
+/* ---- Portal Features Grid ---- */
+.portal-features{max-width:780px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+
+/* ---- Industry Sidebar Items ---- */
+.ind-sidebar-list{margin-top:1.5rem;text-align:left}
+.ind-sidebar-label{
+  font-size:.72rem;font-weight:800;letter-spacing:.15em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;
+}
+.ind-sidebar-item{font-size:.83rem;color:rgba(255,255,255,.6);margin-bottom:.5rem}
+
+/* ---- Footer Tagline ---- */
+.footer-tagline{font-size:.78rem;color:rgba(255,255,255,.3);font-style:italic}
+
+/* ---- Footer SVG Icons ---- */
+.footer-contact-item svg{
+  width:18px;height:18px;flex-shrink:0;fill:none;
+  stroke:rgba(255,255,255,.4);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ---- Contact Page icon-box in details ---- */
+.contact-detail .icon-box{margin-bottom:0;width:40px;height:40px;border-radius:8px}
+.contact-detail .icon-box svg{width:20px;height:20px}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media(max-width:1024px){
@@ -365,53 +538,111 @@ footer{background:var(--navy-deep);color:rgba(255,255,255,.6);padding:72px 0 0}
   .sd-meta{position:static}
   .about-values{grid-template-columns:1fr 1fr}
   .hero{padding:110px 0 90px}
+  .security-grid{grid-template-columns:repeat(3,1fr)}
 }
+
 @media(max-width:768px){
   :root{--section-pad:64px;--nav-h:66px}
+
+  /* Nav */
   .nav-links,.nav-cta{display:none}
   .nav-toggle{display:flex}
+  .nav-logo-img{height:34px}
+
+  /* Hero */
   .hero{padding:85px 0 65px}
   .hero-grid{grid-template-columns:1fr;gap:2.5rem}
   .hero-visual{display:none}
   .hero h1{font-size:clamp(2rem,8vw,2.6rem)}
   .hero-sub{font-size:1.02rem}
-  .process-steps{grid-template-columns:1fr 1fr;gap:2rem}
-  .process-steps::before{display:none}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%;justify-content:center}
+
+  /* Page Heroes */
+  .page-hero{padding:65px 0 55px}
+  .page-hero h1{font-size:clamp(1.7rem,6vw,2.2rem)}
+
+  /* Grids → single column */
+  .split-grid{grid-template-columns:1fr;gap:2.5rem}
+  .split-grid.reverse .split-visual{order:0}
+  .services-grid{grid-template-columns:1fr}
+  .industries-grid{grid-template-columns:1fr 1fr}
+  .about-values{grid-template-columns:1fr}
   .benefits-grid{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr 1fr;gap:1rem}
   .stat-num{font-size:2.6rem}
-  .services-grid{grid-template-columns:1fr}
-  .industries-grid{grid-template-columns:1fr 1fr}
+  .process-steps{grid-template-columns:1fr 1fr;gap:2rem}
+  .process-steps::before{display:none}
+  .ind-grid{grid-template-columns:1fr;gap:2rem}
   .footer-grid{grid-template-columns:1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;text-align:center}
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:span 1}
   .form-card{padding:2rem 1.5rem}
-  .split-grid{grid-template-columns:1fr;gap:2.5rem}
-  .split-grid.reverse .split-visual{order:0}
-  .ind-grid{grid-template-columns:1fr;gap:2rem}
-  .about-values{grid-template-columns:1fr}
-  .footer-bottom{flex-direction:column;text-align:center}
+
+  /* New components — mobile collapse */
+  .serve-grid{grid-template-columns:1fr}
+  .portal-features{grid-template-columns:1fr}
+  .security-grid{grid-template-columns:1fr;gap:1rem}
+  .security-box{padding:2rem 1.5rem}
+
+  /* CTA */
   .cta-actions{flex-direction:column;align-items:center}
   .cta-band{padding:72px 0}
-  .hero-actions{flex-direction:column}
-  .hero-actions .btn{width:100%;justify-content:center}
-  .page-hero{padding:65px 0 55px}
-  .page-hero h1{font-size:clamp(1.7rem,6vw,2.2rem)}
-  .who-we-serve-grid{grid-template-columns:1fr!important}
+
+  /* Trust bar */
   .trust-items{gap:1.25rem}
+  .trust-items{flex-direction:column;align-items:flex-start;gap:.75rem;padding:0 .5rem}
+
+  /* Inline grid overrides — CRITICAL for mobile */
+  /* These override inline style="grid-template-columns:1fr 1fr" */
+  .split-visual [style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
+  }
+  .sd-grid [style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
+  }
+  /* Override 3-col process steps inline on client-portal */
+  .process-steps[style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
+  }
+
+  /* Cost card layout */
+  .cost-card{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .cost-card-amount{font-size:1.2rem}
 }
+
 @media(max-width:480px){
   :root{--section-pad:52px}
-  .container{padding:0 18px}
+  .container{padding:0 16px}
   .process-steps{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr}
   .industries-grid{grid-template-columns:1fr}
-  .trust-items{gap:.85rem}
+  .trust-items{gap:.65rem}
   .trust-item{font-size:.76rem}
   .hero{padding:70px 0 50px}
   .hero h1{font-size:1.85rem}
   .section-header{margin-bottom:3rem}
+
+  /* Small screen type */
+  h2{font-size:1.5rem}
+  .sd-number{font-size:4rem}
+  .ind-sidebar{padding:1.5rem}
+  .ind-emoji{font-size:2.5rem}
+
+  /* Footer tighter */
+  footer{padding:48px 0 0}
+  .footer-grid{gap:1.5rem}
+
+  /* Form fields full width */
+  .form-card{padding:1.5rem 1.15rem}
+  .form-group input,.form-group select,.form-group textarea{font-size:.9rem;padding:.75rem .9rem}
+
+  /* Serve cards stack */
+  .serve-card{flex-direction:column;gap:.75rem}
+  .serve-card .icon-box{width:36px;height:36px}
 }
+
 @media print{
   .nav,.mobile-nav,.cta-band,footer,.btn{display:none}
   .section{padding:2rem 0}
