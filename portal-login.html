@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pinnacle Bookkeeping Client Portal — Secure login for existing clients to upload and manage financial documents.">
+  <title>Client Portal Login — Pinnacle Bookkeeping Services Ltd.</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: var(--navy-deep); }
+
+    .portal-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Minimal nav for portal */
+    .portal-nav {
+      background: rgba(12,31,66,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .portal-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      position: relative;
+    }
+
+    /* Background decoration */
+    .portal-main::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 30% 30%, rgba(74,114,184,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(74,114,184,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .portal-container {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .portal-header { text-align: center; margin-bottom: 2rem; }
+    .portal-header .logo-wrap {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-bottom: 1.5rem; text-decoration: none;
+    }
+    .portal-header h1 {
+      font-size: 1.75rem; color: var(--white); margin-bottom: 0.4rem;
+    }
+    .portal-header p {
+      font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.6;
+    }
+
+    .portal-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    }
+
+    .portal-card-header {
+      margin-bottom: 1.75rem;
+    }
+    .portal-card-header h2 {
+      font-size: 1.3rem; margin-bottom: 0.25rem;
+    }
+    .portal-card-header p {
+      font-size: 0.84rem; color: var(--muted);
+    }
+
+    .login-fields { display: flex; flex-direction: column; gap: 1.1rem; margin-bottom: 1.5rem; }
+    .login-field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .login-field label {
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--navy);
+    }
+    .login-field input {
+      padding: 0.85rem 1rem; border: 2px solid var(--border); border-radius: 8px;
+      font-family: var(--font-body); font-size: 0.93rem; color: var(--text);
+      background: var(--white); outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .login-field input:focus { border-color: var(--blue); }
+    .login-field.password-wrap { position: relative; }
+    .login-field.password-wrap input { padding-right: 3rem; }
+    .toggle-pw {
+      position: absolute; right: 0.75rem; bottom: 0.85rem;
+      background: none; border: none; font-size: 1rem; cursor: pointer;
+      color: var(--muted); padding: 0; line-height: 1;
+    }
+    .toggle-pw:hover { color: var(--navy); }
+
+    .login-options {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; font-size: 0.82rem;
+    }
+    .remember-wrap { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); cursor: pointer; }
+    .remember-wrap input { width: 15px; height: 15px; cursor: pointer; accent-color: var(--navy); }
+    .forgot-link { color: var(--blue); font-weight: 700; transition: color 0.2s; }
+    .forgot-link:hover { color: var(--navy); }
+
+    .login-btn {
+      width: 100%; padding: 1rem; background: var(--navy); color: var(--white);
+      border: none; border-radius: 10px; font-family: var(--font-body);
+      font-size: 0.95rem; font-weight: 800; cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .login-btn:hover { background: var(--navy-dark); transform: translateY(-1px); }
+
+    .portal-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.5rem 0; font-size: 0.78rem; color: var(--muted);
+    }
+    .portal-divider::before, .portal-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .alt-access {
+      display: flex; flex-direction: column; gap: 0.65rem;
+    }
+    .alt-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      padding: 0.85rem; border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: var(--font-body); font-size: 0.87rem; font-weight: 700;
+      color: var(--text-md); background: var(--white); cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .alt-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--sky); }
+
+    .portal-footer-note {
+      text-align: center; margin-top: 1.75rem;
+      font-size: 0.8rem; color: rgba(255,255,255,0.35); line-height: 1.65;
+    }
+    .portal-footer-note a { color: rgba(255,255,255,0.5); text-decoration: underline; }
+    .portal-footer-note a:hover { color: rgba(255,255,255,0.8); }
+
+    /* Not-a-client nudge */
+    .not-client-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+      text-align: center; margin-top: 1.5rem;
+    }
+    .not-client-box p {
+      font-size: 0.84rem; color: rgba(255,255,255,0.45); margin-bottom: 1rem; line-height: 1.6;
+    }
+    .not-client-box strong { color: rgba(255,255,255,0.7); }
+
+    /* Error state */
+    .login-error {
+      background: #fef0ef; border: 1px solid #f5c2be; border-radius: 8px;
+      padding: 0.75rem 1rem; font-size: 0.84rem; color: var(--red);
+      font-weight: 600; display: none; margin-bottom: 1rem;
+    }
+    .login-error.show { display: block; }
+
+    /* Security badge */
+    .security-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; margin-top: 1.25rem; flex-wrap: wrap;
+    }
+    .sec-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.3);
+    }
+
+    footer {
+      background: transparent;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 1.25rem 1.5rem; text-align: center;
+      font-size: 0.75rem; color: rgba(255,255,255,0.25);
+    }
+    footer a { color: rgba(255,255,255,0.35); }
+
+    @media (max-width: 480px) {
+      .portal-card { padding: 1.75rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="portal-page">
+
+  <!-- MINIMAL NAV -->
+  <div class="portal-nav">
+    <a href="index.html" class="nav-logo">
+      <svg class="nav-logo-mark" viewBox="0 0 36 36" fill="none">
+        <rect width="36" height="36" rx="8" fill="#4A72B8"/>
+        <polygon points="18,5 32,30 4,30" fill="white"/>
+        <polygon points="4,30 32,30 28,23 10,28" fill="#4A72B8"/>
+        <polygon points="14,30 32,30 29,25" fill="white"/>
+      </svg>
+      <div class="nav-logo-text" style="color:white;">
+        Pinnacle Bookkeeping
+        <small style="color:rgba(255,255,255,0.35);">Services Ltd.</small>
+      </div>
+    </a>
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <a href="client-portal.html" style="font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.45); transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">← Portal Info</a>
+      <a href="contact.html" class="btn btn-outline-white btn-sm">Need Help?</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="portal-main">
+    <div class="portal-container">
+
+      <div class="portal-header">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:99px; padding:0.35rem 1rem; font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.55); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.25rem;">
+          🔐 Secure Client Access
+        </div>
+        <h1>Client Portal</h1>
+        <p>Sign in to securely access and upload your financial documents.</p>
+      </div>
+
+      <div class="portal-card">
+        <div class="portal-card-header">
+          <h2>Welcome Back</h2>
+          <p>Enter your credentials to access your secure portal.</p>
+        </div>
+
+        <div class="login-error" id="login-error">
+          Incorrect email or password. Please try again, or contact us at <a href="mailto:amitb.bkpg@gmail.com">amitb.bkpg@gmail.com</a>.
+        </div>
+
+        <form id="portal-login-form" novalidate>
+          <div class="login-fields">
+            <div class="login-field">
+              <label for="portal-email">Email Address</label>
+              <input type="email" id="portal-email" placeholder="jane@yourbusiness.com" autocomplete="email" required>
+            </div>
+            <div class="login-field password-wrap">
+              <label for="portal-password">Password</label>
+              <input type="password" id="portal-password" placeholder="••••••••••" autocomplete="current-password" required>
+              <button type="button" class="toggle-pw" id="toggle-pw" title="Show/hide password">👁</button>
+            </div>
+          </div>
+
+          <div class="login-options">
+            <label class="remember-wrap">
+              <input type="checkbox" id="remember-me"> Keep me signed in
+            </label>
+            <a href="#" class="forgot-link" onclick="showForgotMessage(event)">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="login-btn" id="login-btn">
+            🔐 Sign In to Portal
+          </button>
+        </form>
+
+        <div class="portal-divider">or access via</div>
+
+        <div class="alt-access">
+          <a href="https://qbo.intuit.com" target="_blank" rel="noopener" class="alt-btn">
+            <span style="font-size:1.1rem;">📊</span>
+            Sign in via QuickBooks Online
+          </a>
+          <a href="https://drive.google.com" target="_blank" rel="noopener" class="alt-btn">
+            <span style="font-size:1.1rem;">📁</span>
+            Access Shared Google Drive Folder
+          </a>
+        </div>
+      </div>
+
+      <div class="security-row">
+        <div class="sec-item">🔒 Encrypted &amp; Secure</div>
+        <div class="sec-item">🇨🇦 PIPEDA Compliant</div>
+        <div class="sec-item">🔑 Access Controlled</div>
+      </div>
+
+      <!-- NOT A CLIENT -->
+      <div class="not-client-box">
+        <p><strong>Not a client yet?</strong><br>Portal access is provided during onboarding. If you're interested in working with Pinnacle, start with a free quote.</p>
+        <a href="quote-calculator.html" class="btn btn-quote btn-sm" style="display:inline-flex;">Get a Free Quote →</a>
+      </div>
+
+      <div class="portal-footer-note">
+        Having trouble logging in?<br>
+        Contact us at <a href="mailto:amitb.bkpg@gmail.com">amitb.bkpg@gmail.com</a> or call <a href="tel:8073566173">(807) 356-6173</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Pinnacle Bookkeeping Services Ltd. &nbsp;|&nbsp;
+    <a href="index.html">Home</a> &nbsp;|&nbsp;
+    <a href="contact.html">Contact</a> &nbsp;|&nbsp;
+    Thunder Bay, Ontario
+  </footer>
+
+</div>
+
+<script src="js/script.js"></script>
+<script>
+  // Toggle password visibility
+  var pwInput = document.getElementById('portal-password');
+  var toggleBtn = document.getElementById('toggle-pw');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      var isText = pwInput.type === 'text';
+      pwInput.type = isText ? 'password' : 'text';
+      toggleBtn.textContent = isText ? '👁' : '🙈';
+    });
+  }
+
+  // Login form — demo handler (replace with real auth)
+  var loginForm = document.getElementById('portal-login-form');
+  var loginBtn = document.getElementById('login-btn');
+  if (loginForm) {
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('portal-email').value.trim();
+      var password = document.getElementById('portal-password').value;
+      if (!email || !password) return;
+
+      loginBtn.textContent = 'Signing in…';
+      loginBtn.disabled = true;
+
+      // Simulate auth delay — replace this block with your actual auth logic
+      setTimeout(function () {
+        // For demo: show error (replace with real validation)
+        document.getElementById('login-error').classList.add('show');
+        loginBtn.textContent = '🔐 Sign In to Portal';
+        loginBtn.disabled = false;
+      }, 1200);
+    });
+  }
+
+  // Forgot password message
+  function showForgotMessage(e) {
+    e.preventDefault();
+    alert('To reset your password, please email amitb.bkpg@gmail.com or call (807) 356-6173 and we\'ll get you sorted right away.');
+  }
+</script>
+</body>
+</html>

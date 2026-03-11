@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pinnaclebookkeeping.ca/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/about.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/services.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/industries.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/faq.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/contact.html</loc><priority>0.8</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/client-portal.html</loc><priority>0.6</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://pinnaclebookkeeping.ca/quote-calculator.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+</urlset>

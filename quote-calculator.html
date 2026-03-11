@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Your Free Quote — Pinnacle Bookkeeping Services Ltd. (v3)</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1B3F7A;
+    --blue: #4A72B8;
+    --light: #E6EDF8;
+    --white: #ffffff;
+    --text: #1e2a3a;
+    --muted: #5a6a80;
+    --border: #ccd8ee;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--light);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--navy);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .topbar-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .topbar-name { font-family: 'Lora', serif; font-size: 0.95rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+  .topbar-name small { display: block; font-family: 'Nunito', sans-serif; font-size: 0.62rem; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .restart-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 0.45rem 1rem; border-radius: 6px; font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .restart-btn:hover { background: rgba(255,255,255,0.2); color: var(--white); }
+
+  /* PROGRESS */
+  .progress-wrap { background: var(--navy); padding: 0 1.5rem 1.1rem; display: none; }
+  .progress-track { background: rgba(255,255,255,0.15); border-radius: 99px; height: 5px; overflow: hidden; max-width: 580px; margin: 0 auto; }
+  .progress-fill { height: 100%; background: #7fa8e0; border-radius: 99px; transition: width 0.5s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .progress-label { text-align: center; font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.45); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 0.5rem; max-width: 580px; margin-left: auto; margin-right: auto; }
+
+  /* MAIN */
+  main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem 3rem; }
+
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: 0 4px 32px rgba(27,63,122,0.1); padding: 2.5rem 2rem; width: 100%; max-width: 580px; animation: slideIn 0.35s cubic-bezier(.4,0,.2,1) both; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+  .step-tag::before { content: ''; display: block; width: 20px; height: 2px; background: var(--blue); border-radius: 2px; }
+
+  .card h2 { font-family: 'Lora', serif; font-size: 1.55rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 0.5rem; }
+  .card .subtitle { font-size: 0.92rem; color: var(--muted); font-weight: 400; line-height: 1.6; margin-bottom: 1.75rem; }
+
+  /* OPTION CARDS */
+  .options { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .option-card { border: 2px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; display: flex; align-items: center; gap: 1rem; }
+  .option-card:hover { border-color: var(--blue); background: #f4f7fd; transform: translateX(3px); }
+  .option-card.selected { border-color: var(--navy); background: var(--light); }
+
+  .option-icon { font-size: 1.6rem; flex-shrink: 0; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
+  .option-body { flex: 1; }
+  .option-title { font-size: 0.98rem; font-weight: 800; color: var(--navy); margin-bottom: 0.15rem; }
+  .option-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  .option-check { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 0.75rem; }
+  .option-card.selected .option-check { background: var(--navy); border-color: var(--navy); color: var(--white); }
+
+  /* YES/NO */
+  .yn-wrap { display: flex; gap: 0.75rem; }
+  .yn-btn { flex: 1; padding: 1rem; border: 2px solid var(--border); border-radius: 10px; background: var(--white); font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800; color: var(--muted); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .yn-btn:hover { border-color: var(--blue); color: var(--navy); background: #f4f7fd; }
+  .yn-btn.selected-yes { border-color: var(--navy); background: var(--light); color: var(--navy); }
+  .yn-btn.selected-no { border-color: var(--border); background: #f9f9f9; color: var(--muted); }
+
+  /* NUMBER COUNTER */
+  .number-input-wrap { display: flex; align-items: center; gap: 1rem; justify-content: center; margin: 1rem 0; }
+  .num-btn { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); font-size: 1.3rem; font-weight: 800; color: var(--navy); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; }
+  .num-btn:hover:not(:disabled) { background: var(--light); border-color: var(--blue); }
+  .num-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .num-display { font-family: 'Lora', serif; font-size: 2.5rem; font-weight: 700; color: var(--navy); min-width: 80px; text-align: center; line-height: 1; }
+  .num-label { text-align: center; font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* FORM INPUTS */
+  .form-fields { display: flex; flex-direction: column; gap: 1rem; }
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-group label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--navy); }
+  .field-group input { padding: 0.85rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; }
+  .field-group input:focus { border-color: var(--blue); }
+  .field-error { font-size: 0.78rem; color: var(--red); font-weight: 600; display: none; }
+  .field-group.has-error .field-error { display: block; }
+  .field-group.has-error input { border-color: var(--red); }
+
+  /* NEXT BUTTON */
+  .next-btn { width: 100%; padding: 1rem; background: var(--navy); color: var(--white); border: none; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 1.5rem; letter-spacing: 0.02em; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .next-btn:hover:not(:disabled) { background: #132e5e; transform: translateY(-1px); }
+  .next-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+  /* UPSELL BADGE */
+  .upsell-badge { display: inline-flex; align-items: center; gap: 4px; background: #fff3cd; color: #856404; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; }
+
+  /* WELCOME */
+  #screen-welcome .card { text-align: center; padding: 3rem 2rem; }
+  .welcome-logo { margin: 0 auto 1.5rem; width: 80px; height: 80px; }
+  .welcome-logo svg { width: 80px; height: 80px; }
+  #screen-welcome h1 { font-family: 'Lora', serif; font-size: clamp(1.7rem, 5vw, 2.4rem); font-weight: 700; color: var(--navy); line-height: 1.25; margin-bottom: 0.75rem; }
+  .welcome-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; margin-bottom: 0.5rem; font-weight: 400; }
+  .trust-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1.5rem 0 2rem; }
+  .trust-chip { background: var(--light); border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 0.35rem; }
+  .start-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--navy); color: var(--white); padding: 1rem 2.5rem; border-radius: 10px; border: none; font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+  .start-btn:hover { background: #132e5e; transform: translateY(-2px); }
+
+  /* RESULT */
+  #screen-result .card { padding: 2rem; }
+  .result-header { text-align: center; margin-bottom: 1.75rem; }
+  .result-header .checkmark { width: 56px; height: 56px; background: #d4edda; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem; }
+  .result-header h2 { font-family: 'Lora', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 0.4rem; }
+  .result-header p { font-size: 0.88rem; color: var(--muted); }
+
+  .result-price-box { background: var(--navy); border-radius: 10px; padding: 1.5rem; text-align: center; margin-bottom: 1.25rem; }
+  .result-price-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 0.5rem; }
+  .result-price { font-family: 'Lora', serif; font-size: 2.4rem; font-weight: 700; color: var(--white); line-height: 1; }
+  .result-price-note { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
+
+  .result-breakdown { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.25rem; }
+  .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .label { color: var(--muted); font-weight: 600; }
+  .breakdown-row .value { color: var(--navy); font-weight: 800; text-align: right; max-width: 55%; }
+
+  .result-disclaimer { background: var(--light); border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.25rem; border-left: 3px solid var(--blue); }
+
+  .result-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn-calendly { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--blue); color: var(--white); padding: 1rem; border-radius: 10px; text-decoration: none; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 800; transition: background 0.2s; }
+  .btn-calendly:hover { background: #3a5fa0; }
+  .btn-restart-final { display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--white); color: var(--muted); padding: 0.85rem; border-radius: 10px; border: 1.5px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-restart-final:hover { border-color: var(--navy); color: var(--navy); }
+  .email-sent-note { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 0.75rem; }
+
+  /* RUSH INFO BOX */
+  .info-box { background: var(--light); border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; border-left: 3px solid var(--blue); }
+  .info-box-title { font-size: 0.85rem; color: var(--navy); font-weight: 800; margin-bottom: 0.4rem; }
+  .info-box ul { padding-left: 1.2rem; font-size: 0.82rem; color: var(--muted); line-height: 1.8; }
+  .rush-fee-note { text-align: center; font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; }
+  .rush-fee-note strong { color: var(--navy); }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* LOADING */
+  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(27,63,122,0.88); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+  .loading-overlay.show { display: flex; }
+  .spinner { width: 44px; height: 44px; border: 4px solid rgba(255,255,255,0.2); border-top-color: var(--white); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--white); font-weight: 700; font-size: 0.95rem; }
+
+  footer { background: var(--navy); padding: 1rem 1.5rem; text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .card { padding: 1.75rem 1.25rem; }
+    .card h2 { font-size: 1.3rem; }
+    #screen-welcome h1 { font-size: 1.6rem; }
+  }
+</style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Crunching your numbers...</div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="#" class="topbar-logo">
+    <img src="./Pinnacle bookkeeping white logo.svg" style="width:32px;height:32px;">
+    <div class="topbar-name">
+      Pinnacle Bookkeeping Services Ltd.
+      <small>Thunder Bay, Ontario</small>
+    </div>
+  </a>
+  <button class="restart-btn" id="btn-restart-top">↺ Start Over</button>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel"></div>
+</div>
+
+<main>
+
+  <!-- WELCOME -->
+  <div class="screen active" id="screen-welcome">
+    <div class="card">
+      <div class="welcome-logo">
+        <img src="./Pinnacle bookkeeping logo.svg" style="width:80px;height:80px;">
+      </div>
+      <h1>Find Out What Bookkeeping Actually Costs You</h1>
+      <p class="welcome-sub">Answer a few quick questions and get a personalised price estimate — no spreadsheets, no phone tag, no awkward small talk.</p>
+      <p class="welcome-sub" style="font-size:0.85rem; margin-top:-0.5rem;">Takes about 2 minutes. Your quote gets emailed to you automatically. 📬</p>
+      <div class="trust-row">
+        <span class="trust-chip">✅ No commitment required</span>
+        <span class="trust-chip">🔒 Your info is safe</span>
+        <span class="trust-chip">⚡ Instant estimate</span>
+      </div>
+      <button class="start-btn" id="btn-start">Let's Get Your Quote →</button>
+    </div>
+  </div>
+
+  <!-- STEP 1 — SERVICE TYPE -->
+  <div class="screen" id="screen-s1">
+    <div class="card">
+      <div class="step-tag" id="tag-s1">Step 1</div>
+      <h2>What are you looking for?</h2>
+      <p class="subtitle">Pick the one that fits your situation best — no wrong answers.</p>
+      <div class="options">
+        <div class="option-card" data-key="serviceType" data-val="monthly" data-group="s1">
+          <div class="option-icon">📅</div>
+          <div class="option-body">
+            <div class="option-title">Monthly Bookkeeping</div>
+            <div class="option-desc">Ongoing monthly service — we keep your books current all year long.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="serviceType" data-val="catchup" data-group="s1">
+          <div class="option-icon">🔄</div>
+          <div class="option-body">
+            <div class="option-title">Catch-Up Bookkeeping</div>
+            <div class="option-desc">Books behind? We'll bring you current. No judgment, just clean numbers.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="serviceType" data-val="cleanup" data-group="s1">
+          <div class="option-icon">🧹</div>
+          <div class="option-body">
+            <div class="option-title">One-Time Cleanup</div>
+            <div class="option-desc">A mess of transactions that need untangling. One-time project, fresh start.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s1" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 — BUSINESS SIZE -->
+  <div class="screen" id="screen-s2">
+    <div class="card">
+      <div class="step-tag" id="tag-s2">Step 2</div>
+      <h2>How big is your business?</h2>
+      <p class="subtitle">Rough annual revenue — helps us match you to the right service level. Ballpark is fine.</p>
+      <div class="options">
+        <div class="option-card" data-key="bizSize" data-val="micro" data-group="s2">
+          <div class="option-icon">🌱</div>
+          <div class="option-body">
+            <div class="option-title">Under $100K / year</div>
+            <div class="option-desc">Just starting out or keeping things lean. Side hustle counts too.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="bizSize" data-val="small" data-group="s2">
+          <div class="option-icon">🏪</div>
+          <div class="option-body">
+            <div class="option-title">$100K – $300K / year</div>
+            <div class="option-desc">Established small business — things are moving and your books should too.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="bizSize" data-val="growing" data-group="s2">
+          <div class="option-icon">📈</div>
+          <div class="option-body">
+            <div class="option-title">$300K – $750K / year</div>
+            <div class="option-desc">Growing fast, more moving parts — payroll, multiple accounts, the works.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="bizSize" data-val="mid" data-group="s2">
+          <div class="option-icon">🏢</div>
+          <div class="option-body">
+            <div class="option-title">$750K+ / year</div>
+            <div class="option-desc">Mid-size operation — you need someone who can keep up with you.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s2" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 — ACCOUNTS -->
+  <div class="screen" id="screen-s3">
+    <div class="card">
+      <div class="step-tag" id="tag-s3">Step 3</div>
+      <h2>How many bank accounts & credit cards do you have?</h2>
+      <p class="subtitle">Count all business accounts — chequing, savings, credit cards. Leave personal ones out.</p>
+      <div class="number-input-wrap">
+        <button class="num-btn" id="dec-accounts">−</button>
+        <div>
+          <div class="num-display" id="display-accounts">1</div>
+          <div class="num-label">account(s)</div>
+        </div>
+        <button class="num-btn" id="inc-accounts">+</button>
+      </div>
+      <button class="next-btn" id="next-s3">Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 — TRANSACTION VOLUME -->
+  <div class="screen" id="screen-s4">
+    <div class="card">
+      <div class="step-tag" id="tag-s4">Step 4</div>
+      <h2>How busy is your business month to month?</h2>
+      <p class="subtitle">Think about how many purchases, sales, deposits, and payments flow through your accounts each month. Check your bank statement if you're not sure — it's worth knowing!</p>
+      <div class="options">
+        <div class="option-card" data-key="volume" data-val="quiet" data-group="s4">
+          <div class="option-icon">😌</div>
+          <div class="option-body">
+            <div class="option-title">Quiet — under 50 transactions</div>
+            <div class="option-desc">Not much going on. A few invoices, some expenses, that's about it.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="volume" data-val="steady" data-group="s4">
+          <div class="option-icon">🚶</div>
+          <div class="option-body">
+            <div class="option-title">Steady — around 50 to 150</div>
+            <div class="option-desc">Regular activity, consistent flow. A typical small business.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="volume" data-val="busy" data-group="s4">
+          <div class="option-icon">🏃</div>
+          <div class="option-body">
+            <div class="option-title">Busy — 150 to 300 transactions</div>
+            <div class="option-desc">Things move fast. Lots of sales, lots of expenses, multiple vendors.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="volume" data-val="very" data-group="s4">
+          <div class="option-icon">🔥</div>
+          <div class="option-body">
+            <div class="option-title">Very busy — 300 to 500</div>
+            <div class="option-desc">High volume. Possibly a restaurant, retail, or service business with daily sales.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="volume" data-val="nonstop" data-group="s4">
+          <div class="option-icon">💥</div>
+          <div class="option-body">
+            <div class="option-title">Non-stop — 500+ transactions</div>
+            <div class="option-desc">Something is always happening. You need a bookkeeper who can sprint.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s4" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5 — RECORD CONDITION -->
+  <div class="screen" id="screen-s5">
+    <div class="card">
+      <div class="step-tag" id="tag-s5">Step 5</div>
+      <h2>How would you describe your records right now?</h2>
+      <p class="subtitle">Be honest — we've seen it all and we're not here to judge. This just helps us give you an accurate estimate.</p>
+      <div class="options">
+        <div class="option-card" data-key="condition" data-val="clean" data-group="s5">
+          <div class="option-icon">✅</div>
+          <div class="option-body">
+            <div class="option-title">Pretty organized</div>
+            <div class="option-desc">Receipts are mostly in order, accounts are tracked, things are findable.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="condition" data-val="moderate" data-group="s5">
+          <div class="option-icon">🤔</div>
+          <div class="option-body">
+            <div class="option-title">Somewhat organized</div>
+            <div class="option-desc">Some gaps here and there, but nothing catastrophic. You know roughly where things are.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="condition" data-val="messy" data-group="s5">
+          <div class="option-icon">😬</div>
+          <div class="option-body">
+            <div class="option-title">Honestly? It's a bit of a mess</div>
+            <div class="option-desc">Receipts in a drawer, maybe a shoebox. You've been meaning to deal with it.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="condition" data-val="disaster" data-group="s5">
+          <div class="option-icon">🙈</div>
+          <div class="option-body">
+            <div class="option-title">Let's not talk about it</div>
+            <div class="option-desc">It's a situation. No judgment — that's literally what we're here for.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s5" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 6 — MONTHS BEHIND (catch-up only) -->
+  <div class="screen" id="screen-s6">
+    <div class="card">
+      <div class="step-tag" id="tag-s6">Step 6</div>
+      <h2>How many months behind are your books?</h2>
+      <p class="subtitle">Roughly — confirmed on your intake call. We just want a ballpark.</p>
+      <div class="options">
+        <div class="option-card" data-key="monthsBehind" data-val="1-3" data-group="s6">
+          <div class="option-icon">😬</div>
+          <div class="option-body">
+            <div class="option-title">1 – 3 months behind</div>
+            <div class="option-desc">Not bad. A few weekends of work, sorted.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="monthsBehind" data-val="4-6" data-group="s6">
+          <div class="option-icon">😅</div>
+          <div class="option-body">
+            <div class="option-title">4 – 6 months behind</div>
+            <div class="option-desc">Okay, tax season was rough. We've got you.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="monthsBehind" data-val="7-9" data-group="s6">
+          <div class="option-icon">😰</div>
+          <div class="option-body">
+            <div class="option-title">7 – 9 months behind</div>
+            <div class="option-desc">Time to stop avoiding it. We make this painless.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+        <div class="option-card" data-key="monthsBehind" data-val="10-12" data-group="s6">
+          <div class="option-icon">🫣</div>
+          <div class="option-body">
+            <div class="option-title">10 – 12 months behind</div>
+            <div class="option-desc">A full year. Still fixable — we're not here to judge.</div>
+          </div>
+          <div class="option-check">✓</div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s6" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 7 — PAYROLL -->
+  <div class="screen" id="screen-s7">
+    <div class="card">
+      <div class="step-tag" id="tag-s7">Step 7</div>
+      <h2>Do you need payroll? <span class="upsell-badge">⭐ Popular</span></h2>
+      <p class="subtitle">We handle the full payroll run — calculations, deductions, CRA remittances. You just approve and pay.</p>
+      <div class="yn-wrap" id="yn-payroll">
+        <button class="yn-btn" id="btn-payroll-yes">✅ Yes, add payroll</button>
+        <button class="yn-btn" id="btn-payroll-no">No thanks</button>
+      </div>
+      <div id="payroll-employees" style="display:none; margin-top:1.5rem;">
+        <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem; font-weight:700;">How many employees are on payroll?</p>
+        <div class="options">
+          <div class="option-card" data-key="employees" data-val="1-3" data-group="emp">
+            <div class="option-icon">👤</div>
+            <div class="option-body"><div class="option-title">1 – 3 employees</div><div class="option-desc">Small team, straightforward runs.</div></div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" data-key="employees" data-val="4-8" data-group="emp">
+            <div class="option-icon">👥</div>
+            <div class="option-body"><div class="option-title">4 – 8 employees</div><div class="option-desc">Getting busier — let us handle the math.</div></div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" data-key="employees" data-val="9-15" data-group="emp">
+            <div class="option-icon">🏃</div>
+            <div class="option-body"><div class="option-title">9 – 15 employees</div><div class="option-desc">A real team. Payroll needs to be tight.</div></div>
+            <div class="option-check">✓</div>
+          </div>
+          <div class="option-card" data-key="employees" data-val="16+" data-group="emp">
+            <div class="option-icon">🏢</div>
+            <div class="option-body"><div class="option-title">16+ employees</div><div class="option-desc">Larger operation — we'll build a custom payroll quote.</div></div>
+            <div class="option-check">✓</div>
+          </div>
+        </div>
+      </div>
+      <button class="next-btn" id="next-s7" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 8 — RUSH (monthly only) -->
+  <div class="screen" id="screen-s8">
+    <div class="card">
+      <div class="step-tag" id="tag-s8">Step 8</div>
+      <h2>Want Rush Bookkeeping? <span class="upsell-badge">⚡ Value Add</span></h2>
+      <p class="subtitle">Books delivered by the <strong>10th of every month</strong> — perfect if you need early numbers for cash flow, decisions, or reporting.</p>
+      <div class="info-box">
+        <div class="info-box-title">What's included with Rush:</div>
+        <ul>
+          <li>Priority processing — your file jumps the queue</li>
+          <li>Books closed and delivered by the 10th</li>
+          <li>Ideal for cash flow sensitive businesses</li>
+        </ul>
+      </div>
+      <div class="rush-fee-note">Rush fee: <strong>+$150/month</strong> added to your quote</div>
+      <div class="yn-wrap" id="yn-rush">
+        <button class="yn-btn" id="btn-rush-yes">⚡ Yes, I want Rush</button>
+        <button class="yn-btn" id="btn-rush-no">Standard timing is fine</button>
+      </div>
+      <button class="next-btn" id="next-s8" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 9 — CONTACT INFO -->
+  <div class="screen" id="screen-s9">
+    <div class="card">
+      <div class="step-tag" id="tag-s9">Last Step!</div>
+      <h2>Almost there! Where should we send your quote?</h2>
+      <p class="subtitle">Your personalised estimate will be emailed right to you. We never spam — promise. 🤝</p>
+      <div class="form-fields">
+        <div class="field-group" id="fg-firstname">
+          <label>First Name</label>
+          <input type="text" id="inp-firstname" placeholder="Jane" oninput="validateContact()">
+          <span class="field-error">Please enter your first name.</span>
+        </div>
+        <div class="field-group" id="fg-email">
+          <label>Email Address</label>
+          <input type="email" id="inp-email" placeholder="jane@yourbusiness.com" oninput="validateContact()">
+          <span class="field-error">Please enter a valid email address.</span>
+        </div>
+        <div class="field-group" id="fg-phone">
+          <label>Phone Number</label>
+          <input type="tel" id="inp-phone" placeholder="(807) 555-0123" oninput="validateContact()">
+          <span class="field-error">Please enter your phone number.</span>
+        </div>
+      </div>
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:1rem; line-height:1.6;">By submitting, you agree that Pinnacle Bookkeeping Services Ltd. may contact you about your quote. No spam, ever.</p>
+      <button class="next-btn" id="next-s9" disabled>📬 Send My Quote →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="card">
+      <div class="result-header">
+        <div class="checkmark">✅</div>
+        <h2>Here's Your Estimate, <span id="result-name">Friend</span>!</h2>
+        <p>A full summary has been sent to <strong id="result-email-display"></strong></p>
+      </div>
+      <div class="result-price-box">
+        <div class="result-price-label" id="result-price-label">Your Estimated Monthly Investment</div>
+        <div class="result-price" id="result-price-range">—</div>
+        <div class="result-price-note" id="result-price-note">Based on your selections</div>
+      </div>
+      <div class="result-breakdown" id="result-breakdown"></div>
+      <div class="result-disclaimer">
+        This is an estimate, not a binding quote. Final pricing is confirmed after a free intake call where we review your actual records. No surprises — we always send a written quote before any work begins.
+      </div>
+      <div class="result-actions">
+        <a href="https://calendly.com/amitb-bkpg" target="_blank" class="btn-calendly">📅 Book Your Free Intake Call</a>
+        <button class="btn-restart-final" id="btn-restart-final">↺ Start a New Quote</button>
+      </div>
+      <p class="email-sent-note">📬 Check your inbox — your quote summary is on its way.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Pinnacle Bookkeeping Services Ltd. — Thunder Bay, Ontario &nbsp;|&nbsp;
+  <a href="tel:8073566173">(807) 356-6173</a> &nbsp;|&nbsp;
+  <a href="mailto:amitb.bkpg@gmail.com">amitb.bkpg@gmail.com</a>
+</footer>
+
+
+<script>
+// STATE
+function defaultState() {
+  return {
+    serviceType: null, bizSize: null, accounts: 1,
+    volume: null, condition: null, monthsBehind: null,
+    payroll: null, employees: null, rush: null,
+    contact: { firstName:'', email:'', phone:'' }
+  };
+}
+var S = defaultState();
+
+// PRICING
+var BASE       = { micro:[65,85], small:[85,110], growing:[110,140], mid:[150,200] };
+var VOLUME     = { quiet:0, steady:75, busy:150, very:250, nonstop:400 };
+var MULTIPLIER = { clean:1.0, moderate:1.25, messy:1.5, disaster:2.0 };
+var PAYROLL    = { '1-3':[95,120], '4-8':[135,175], '9-15':[200,250], '16+':[275,350] };
+var CATCHUP    = { '1-3':[450,700], '4-6':[900,1400], '7-9':[1350,2100], '10-12':[1800,2800] };
+var CLEANUP    = { micro:[500,900], small:[800,1500], growing:[1200,2200], mid:[1800,3200] };
+
+function calcQuote() {
+  var mult = MULTIPLIER[S.condition] || 1.0;
+  var volAddon = VOLUME[S.volume] || 0;
+  var accAddon = Math.max(0, S.accounts - 1) * 40;
+  var r = { monthlyLow:0, monthlyHigh:0, onceTimeLow:0, onceTimeHigh:0 };
+  if (S.serviceType === 'monthly') {
+    var b = BASE[S.bizSize] || [85,110];
+    var pL=0, pH=0, rush=0;
+    if (S.payroll==='yes' && S.employees) { var p=PAYROLL[S.employees]||[95,120]; pL=p[0]; pH=p[1]; }
+    if (S.rush==='yes') rush=150;
+    r.monthlyLow  = Math.round((b[0]+volAddon+accAddon)*mult + pL + rush);
+    r.monthlyHigh = Math.round((b[1]+volAddon+accAddon)*mult + pH + rush);
+  }
+  if (S.serviceType==='catchup') { var c=CATCHUP[S.monthsBehind]||[450,700]; r.onceTimeLow=Math.round(c[0]*mult); r.onceTimeHigh=Math.round(c[1]*mult); }
+  if (S.serviceType==='cleanup') { var cl=CLEANUP[S.bizSize]||[800,1500]; r.onceTimeLow=Math.round(cl[0]*mult); r.onceTimeHigh=Math.round(cl[1]*mult); }
+  return r;
+}
+
+// STEP FLOW
+function getStepList() {
+  var steps = ['s1','s2','s3','s4','s5'];
+  if (S.serviceType==='catchup') steps.push('s6');
+  if (S.serviceType==='monthly') { steps.push('s7'); steps.push('s8'); }
+  steps.push('s9');
+  return steps;
+}
+
+function updateProgress(id) {
+  var steps=getStepList(), idx=steps.indexOf(id), total=steps.length;
+  if (idx<0) return;
+  document.getElementById('progressFill').style.width = Math.round((idx+1)/total*100)+'%';
+  document.getElementById('progressLabel').textContent = 'Step '+(idx+1)+' of '+total;
+  document.getElementById('progressWrap').style.display = 'block';
+  var tag=document.getElementById('tag-'+id);
+  if (tag) tag.textContent = 'Step '+(idx+1)+' of '+total;
+}
+
+function showScreen(id) {
+  var all=document.querySelectorAll('.screen');
+  for (var i=0;i<all.length;i++) all[i].classList.remove('active');
+  var el=document.getElementById('screen-'+id);
+  if (el) el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startCalc() { showScreen('s1'); updateProgress('s1'); }
+
+function advance(fromNum) {
+  var steps=getStepList(), idx=steps.indexOf('s'+fromNum);
+  if (idx<0) return;
+  var next=steps[idx+1];
+  if (next) { showScreen(next); updateProgress(next); }
+}
+
+// OPTION CARD HANDLER
+function handleOptionCard(el) {
+  var key=el.getAttribute('data-key'), val=el.getAttribute('data-val'), group=el.getAttribute('data-group');
+  if (!key||!val) return;
+  var siblings=el.parentNode.querySelectorAll('.option-card');
+  for (var i=0;i<siblings.length;i++) siblings[i].classList.remove('selected');
+  el.classList.add('selected');
+  S[key]=val;
+  var map={s1:'next-s1',s2:'next-s2',s4:'next-s4',s5:'next-s5',s6:'next-s6'};
+  if (map[group]) { var btn=document.getElementById(map[group]); if(btn) btn.disabled=false; }
+  if (group==='emp') { if(S.payroll==='yes'&&S.employees!==null) { var n7=document.getElementById('next-s7'); if(n7) n7.disabled=false; } }
+}
+
+// YN HANDLERS
+function setYN(yesId, noId, chosen) {
+  var y=document.getElementById(yesId), n=document.getElementById(noId);
+  if(!y||!n) return;
+  y.classList.remove('selected-yes','selected-no');
+  n.classList.remove('selected-yes','selected-no');
+  if (chosen==='yes') { y.classList.add('selected-yes'); n.classList.add('selected-no'); }
+  else { n.classList.add('selected-yes'); y.classList.add('selected-no'); }
+}
+
+// ACCOUNTS
+function changeAccounts(delta) {
+  S.accounts=Math.max(1,Math.min(10,S.accounts+delta));
+  document.getElementById('display-accounts').textContent=S.accounts;
+  document.getElementById('dec-accounts').disabled=(S.accounts<=1);
+  document.getElementById('inc-accounts').disabled=(S.accounts>=10);
+}
+function resetAccountsUI() {
+  S.accounts=1;
+  document.getElementById('display-accounts').textContent='1';
+  document.getElementById('dec-accounts').disabled=true;
+  document.getElementById('inc-accounts').disabled=false;
+}
+
+// CONTACT VALIDATION
+function validateContact() {
+  var fn=document.getElementById('inp-firstname').value.trim();
+  var em=document.getElementById('inp-email').value.trim();
+  var ph=document.getElementById('inp-phone').value.trim();
+  var ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em) && ph.replace(/\D/g,'').length>=7 && fn.length>0;
+  document.getElementById('next-s9').disabled=!ok;
+  S.contact={firstName:fn,email:em,phone:ph};
+}
+
+// EMAIL PARAMS
+function buildEmailParams() {
+  var svc={monthly:'Monthly Bookkeeping',catchup:'Catch-Up Bookkeeping',cleanup:'One-Time Cleanup'};
+  var sz={micro:'Under $100K/yr',small:'$100K-$300K/yr',growing:'$300K-$750K/yr',mid:'$750K+/yr'};
+  var vol={quiet:'Under 50/mo',steady:'50-150/mo',busy:'150-300/mo',very:'300-500/mo',nonstop:'500+/mo'};
+  var cond={clean:'Pretty organized',moderate:'Somewhat organized',messy:'A bit of a mess',disaster:"Let's not talk about it"};
+  var beh={'1-3':'1-3 months','4-6':'4-6 months','7-9':'7-9 months','10-12':'10-12 months'};
+  var emp={'1-3':'1-3 employees','4-8':'4-8 employees','9-15':'9-15 employees','16+':'16+ employees'};
+  var q=calcQuote();
+  var price = S.serviceType==='monthly'
+    ? '$'+q.monthlyLow.toLocaleString()+' - $'+q.monthlyHigh.toLocaleString()+'/mo'
+    : '$'+q.onceTimeLow.toLocaleString()+' - $'+q.onceTimeHigh.toLocaleString()+' (one-time)';
+  var payrollLine = S.serviceType==='monthly' ? (S.payroll==='yes' ? 'Yes - '+(emp[S.employees]||'') : 'Not included') : 'N/A';
+  var rushLine    = S.serviceType==='monthly' ? (S.rush==='yes' ? 'Yes (+$150/mo)' : 'Standard timing') : 'N/A';
+  return {
+    client_name:   S.contact.firstName,
+    client_email:  S.contact.email,
+    client_phone:  S.contact.phone,
+    service_type:  svc[S.serviceType]||S.serviceType,
+    biz_size:      sz[S.bizSize]||S.bizSize,
+    accounts:      String(S.accounts),
+    volume:        vol[S.volume]||S.volume,
+    condition:     cond[S.condition]||S.condition,
+    months_behind: S.monthsBehind ? beh[S.monthsBehind] : 'N/A',
+    payroll:       payrollLine,
+    rush:          rushLine,
+    price_range:   price
+  };
+}
+
+// SUBMIT
+function submitQuote() {
+  var fn=document.getElementById('inp-firstname').value.trim();
+  var em=document.getElementById('inp-email').value.trim();
+  var ph=document.getElementById('inp-phone').value.trim();
+  if (!fn||!em||!ph) return;
+  S.contact={firstName:fn,email:em,phone:ph};
+
+  var overlay=document.getElementById('loadingOverlay');
+  overlay.classList.add('show');
+
+  var params=buildEmailParams();
+
+  emailjs.send('service_s0g7o6e','template_6cch9j8',params)
+    .then(function() { return emailjs.send('service_s0g7o6e','template_fepa0dl',params); })
+    .then(function() { overlay.classList.remove('show'); showResult(); })
+    .catch(function(err) {
+      console.error('EmailJS error:',err.status,err.text);
+      overlay.classList.remove('show');
+      showResult();
+    });
+}
+
+// RESULT
+function showResult() {
+  document.getElementById('progressWrap').style.display='none';
+  showScreen('result');
+  var q=calcQuote();
+  document.getElementById('result-name').textContent=S.contact.firstName||'there';
+  document.getElementById('result-email-display').textContent=S.contact.email;
+  var priceEl=document.getElementById('result-price-range');
+  var labelEl=document.getElementById('result-price-label');
+  var noteEl=document.getElementById('result-price-note');
+  if (S.serviceType==='monthly') {
+    labelEl.textContent='Your Estimated Monthly Investment';
+    priceEl.textContent='$'+q.monthlyLow.toLocaleString()+' \u2013 $'+q.monthlyHigh.toLocaleString()+' / mo';
+    noteEl.textContent='Recurring monthly estimate';
+  } else {
+    labelEl.textContent='Your Estimated One-Time Investment';
+    priceEl.textContent='$'+q.onceTimeLow.toLocaleString()+' \u2013 $'+q.onceTimeHigh.toLocaleString();
+    noteEl.textContent='One-time project estimate';
+  }
+  var svc={monthly:'Monthly Bookkeeping',catchup:'Catch-Up Bookkeeping',cleanup:'One-Time Cleanup'};
+  var sz={micro:'Under $100K/yr',small:'$100K\u2013$300K/yr',growing:'$300K\u2013$750K/yr',mid:'$750K+/yr'};
+  var vol={quiet:'Under 50/mo',steady:'50\u2013150/mo',busy:'150\u2013300/mo',very:'300\u2013500/mo',nonstop:'500+/mo'};
+  var cond={clean:'Pretty organized',moderate:'Somewhat organized',messy:'A bit of a mess',disaster:"Let's not talk about it \uD83D\uDE48"};
+  var beh={'1-3':'1\u20133 months','4-6':'4\u20136 months','7-9':'7\u20139 months','10-12':'10\u201312 months'};
+  var emp={'1-3':'1\u20133 employees','4-8':'4\u20138 employees','9-15':'9\u201315 employees','16+':'16+ employees'};
+  var rows=[
+    {label:'Service',value:svc[S.serviceType]||'\u2014'},
+    {label:'Business Size',value:sz[S.bizSize]||'\u2014'},
+    {label:'Accounts / Cards',value:S.accounts},
+    {label:'Monthly Activity',value:vol[S.volume]||'\u2014'},
+    {label:'Record Condition',value:cond[S.condition]||'\u2014'}
+  ];
+  if (S.serviceType==='catchup'&&S.monthsBehind) rows.push({label:'Months Behind',value:beh[S.monthsBehind]});
+  if (S.serviceType==='monthly') {
+    rows.push({label:'Payroll',value:S.payroll==='yes'?('Yes \u2014 '+(emp[S.employees]||'')):'Not included'});
+    rows.push({label:'Rush Bookkeeping',value:S.rush==='yes'?'\u2705 Yes (+$150/mo)':'Standard timing'});
+  }
+  var html='';
+  for (var i=0;i<rows.length;i++) html+='<div class="breakdown-row"><span class="label">'+rows[i].label+'</span><span class="value">'+rows[i].value+'</span></div>';
+  document.getElementById('result-breakdown').innerHTML=html;
+}
+
+// RESTART
+function restartAll() {
+  S=defaultState();
+  var cards=document.querySelectorAll('.option-card');
+  for (var i=0;i<cards.length;i++) cards[i].classList.remove('selected');
+  var yns=document.querySelectorAll('.yn-btn');
+  for (var j=0;j<yns.length;j++) yns[j].classList.remove('selected-yes','selected-no');
+  var btns=['next-s1','next-s2','next-s4','next-s5','next-s6','next-s7','next-s8','next-s9'];
+  for (var k=0;k<btns.length;k++) { var b=document.getElementById(btns[k]); if(b) b.disabled=true; }
+  resetAccountsUI();
+  document.getElementById('payroll-employees').style.display='none';
+  var fields=['inp-firstname','inp-email','inp-phone'];
+  for (var f=0;f<fields.length;f++) { var fe=document.getElementById(fields[f]); if(fe) fe.value=''; }
+  document.getElementById('progressWrap').style.display='none';
+  document.getElementById('progressFill').style.width='0%';
+  showScreen('welcome');
+}
+
+// WIRE EVERYTHING UP
+document.addEventListener('DOMContentLoaded', function() {
+  emailjs.init('KJa5WAbgn2TMjCh5f');
+  resetAccountsUI();
+
+  // Option cards — event delegation
+  var containers=document.querySelectorAll('.options');
+  for (var i=0;i<containers.length;i++) {
+    (function(c) {
+      c.addEventListener('click',function(e) {
+        var el=e.target;
+        while (el&&!el.classList.contains('option-card')) el=el.parentNode;
+        if (el&&el.classList.contains('option-card')) handleOptionCard(el);
+      });
+    })(containers[i]);
+  }
+
+  // Start / Restart
+  var bs=document.getElementById('btn-start'); if(bs) bs.addEventListener('click',startCalc);
+  var br1=document.getElementById('btn-restart-top'); if(br1) br1.addEventListener('click',restartAll);
+  var br2=document.getElementById('btn-restart-final'); if(br2) br2.addEventListener('click',restartAll);
+
+  // Next buttons (s1-s8)
+  for (var n=1;n<=8;n++) {
+    (function(num) {
+      var btn=document.getElementById('next-s'+num);
+      if (btn) btn.addEventListener('click',function() { advance(num); });
+    })(n);
+  }
+
+  // Submit (s9) — separate, does NOT call advance
+  var sub=document.getElementById('next-s9');
+  if (sub) sub.addEventListener('click',submitQuote);
+
+  // YN — payroll
+  var py=document.getElementById('btn-payroll-yes');
+  if (py) py.addEventListener('click',function() {
+    setYN('btn-payroll-yes','btn-payroll-no','yes');
+    S.payroll='yes';
+    document.getElementById('payroll-employees').style.display='block';
+  });
+  var pn=document.getElementById('btn-payroll-no');
+  if (pn) pn.addEventListener('click',function() {
+    setYN('btn-payroll-yes','btn-payroll-no','no');
+    S.payroll='no'; S.employees=null;
+    document.getElementById('payroll-employees').style.display='none';
+    document.getElementById('next-s7').disabled=false;
+  });
+
+  // YN — rush
+  var ry=document.getElementById('btn-rush-yes');
+  if (ry) ry.addEventListener('click',function() {
+    setYN('btn-rush-yes','btn-rush-no','yes');
+    S.rush='yes';
+    document.getElementById('next-s8').disabled=false;
+  });
+  var rn=document.getElementById('btn-rush-no');
+  if (rn) rn.addEventListener('click',function() {
+    setYN('btn-rush-yes','btn-rush-no','no');
+    S.rush='no';
+    document.getElementById('next-s8').disabled=false;
+  });
+
+  // Counter buttons
+  var dec=document.getElementById('dec-accounts'); if(dec) dec.addEventListener('click',function(){changeAccounts(-1);});
+  var inc=document.getElementById('inc-accounts'); if(inc) inc.addEventListener('click',function(){changeAccounts(1);});
+
+  // Contact fields
+  var cf=['inp-firstname','inp-email','inp-phone'];
+  for (var x=0;x<cf.length;x++) {
+    var el=document.getElementById(cf[x]);
+    if (el) el.addEventListener('input',validateContact);
+  }
+});
+</script>
+</body>
+</html>
