@@ -258,6 +258,10 @@
         <div class="p-card">
           <div class="p-card-header">
             <div class="p-card-title">Your Uploaded Documents</div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="p-btn p-btn-outline p-btn-sm" id="btn-download-selected" onclick="downloadSelected()" style="display:none;">⬇️ Download Selected</button>
+              <button class="p-btn p-btn-outline p-btn-sm" onclick="downloadAll()">⬇️ Download All</button>
+            </div>
           </div>
           <div class="file-list" id="uploaded-file-list">
             <div class="empty-state">
@@ -744,7 +748,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  
 <!-- Config -->
 <script src="js/firebase-config.js"></script>
 
