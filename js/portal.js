@@ -86,8 +86,13 @@ function initPortal() {
   document.getElementById('settings-phone').value = userProfile.phone || '';
 
   // Role-based UI
-  if (userProfile.role === 'admin' || userProfile.role === 'employee') {
+  if (userProfile.role === 'admin') {
     document.getElementById('admin-nav-section').style.display = 'block';
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-flex');
+  } else if (userProfile.role === 'employee') {
+    // Employees only see Client Overview, not Manage Users
+    document.getElementById('admin-nav-section').style.display = 'block';
+    document.querySelector('[data-view="admin-users"]').style.display = 'none';
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-flex');
 
     // Admin: "new message" recipients = all clients
