@@ -493,7 +493,8 @@ function renderFileItem(id, data) {
   const commentCount = (data.comments || []).length;
 
   return `
-    <div class="file-item" data-category="${data.category || 'other'}">
+    <div class="file-item" data-category="${data.category || 'other'}" data-file-id="${id}">
+      <input type="checkbox" class="file-select-checkbox" value="${id}" onchange="updateSelectCount()" style="width:16px; height:16px; accent-color:var(--navy); cursor:pointer; flex-shrink:0;">
       <div class="file-icon">${getFileIcon(data.fileName)}</div>
       <div class="file-info">
         <div class="file-name">${escapeHtml(data.fileName)}</div>
@@ -625,6 +626,87 @@ async function downloadFile(fileId) {
   } catch (err) {
     console.error('Download error:', err);
     showToast('Error downloading file.', 'error');
+  }
+}
+function updateSelectCount() {
+  const checked = document.querySelectorAll('.file-select-checkbox:checked');
+  const btn = document.getElementById('btn-download-selected');
+  if (checked.length > 0) {
+    btn.style.display = 'inline-flex';
+    btn.textContent = '⬇️ Download Selected (' + checked.length + ')';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+async function downloadSelected() {
+  const checked = document.querySelectorAll('.file-select-checkbox:checked');
+  if (checked.length === 0) {
+    showToast('No files selected.', 'warning');
+    return;
+  }
+  if (checked.length === 1) {
+    downloadFile(checked[0].value);
+    return;
+  }
+  const fileIds = Array.from(checked).map(cb => cb.value);
+  await downloadAsZip(fileIds);
+}
+
+async function downloadAll() {
+  const fileItems = document.querySelectorAll('#uploaded-file-list .file-item[data-file-id]');
+  if (fileItems.length === 0) {
+    showToast('No files to download.', 'warning');
+    return;
+  }
+  const fileIds = Array.from(fileItems).map(item => item.dataset.fileId);
+  if (fileIds.length === 1) {
+    downloadFile(fileIds[0]);
+    return;
+  }
+  await downloadAsZip(fileIds);
+}
+
+async function downloadAsZip(fileIds) {
+  showToast('Preparing zip download (' + fileIds.length + ' files)...', 'info');
+  try {
+    const zip = new JSZip();
+    const token = await currentUser.getIdToken();
+
+    for (const fileId of fileIds) {
+      const doc = await db.collection('files').doc(fileId).get();
+      if (!doc.exists) continue;
+      const data = doc.data();
+      if (!data.storagePath) continue;
+
+      const response = await fetch(FUNCTIONS_BASE_URL + '/getDownloadUrl', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ storagePath: data.storagePath })
+      });
+      if (!response.ok) continue;
+      const result = await response.json();
+
+      const fileResponse = await fetch(result.url);
+      const blob = await fileResponse.blob();
+      zip.file(data.fileName, blob);
+    }
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(zipBlob);
+    link.download = 'Pinnacle-Documents-' + new Date().toISOString().slice(0, 10) + '.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    showToast('Zip downloaded!', 'success');
+  } catch (err) {
+    console.error('Zip download error:', err);
+    showToast('Error creating zip file.', 'error');
   }
 }
 
