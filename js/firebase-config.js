@@ -5,7 +5,7 @@
  * Find them at: Firebase Console → Project Settings → Your Apps → Web App
  */
 
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
   apiKey: "AIzaSyD4w3tkPzEJZx6dizAR0LJ1Wf2_xS_bkZw",
   authDomain: "pinnacle-portal.firebaseapp.com",
   projectId: "pinnacle-portal",
