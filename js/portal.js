@@ -509,10 +509,9 @@ function renderFileItem(id, data) {
         <button class="file-action-btn" title="Download" onclick="downloadFile('${id}')">⬇️</button>
         <button class="file-action-btn" title="Details & Comments" onclick="openFileDetail('${id}')">💬</button>
         ${canDelete ? '<button class="file-action-btn danger" title="Delete" onclick="deleteFile(\'' + id + '\')">🗑️</button>' : ''}
-      </div>`;
+      </div>
     </div>`;
 }
-
 function filterCategory(btn) {
   document.querySelectorAll('.upload-category-bar .cat-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
@@ -1352,18 +1351,6 @@ async function createUser() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       createdBy: currentUser.uid
     });
-
-    // If client, create their Drive folder via Cloud Function
-    if (role === 'client') {
-      await fetch(FUNCTIONS_BASE_URL + '/createClientFolder', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + await currentUser.getIdToken(),
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ clientUid: newUid, clientName: name, businessName: business })
-      });
-    }
 
     closeModal('modal-create-user');
     showToast('User created: ' + name, 'success');
