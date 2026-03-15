@@ -405,8 +405,7 @@ async function confirmUpload() {
         clientUid: userProfile.role === 'client' ? currentUser.uid : '',
         uploaderUid: currentUser.uid,
         uploaderName: userProfile.name || currentUser.email,
-        driveFileId: result.driveFileId || '',
-        driveFolderId: result.driveFolderId || '',
+        storagePath: result.storagePath || '',
         uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
         comments: comment ? [{
           author: userProfile.name || currentUser.email,
@@ -507,9 +506,10 @@ function renderFileItem(id, data) {
       </div>
       <span class="file-status status-${statusClass}">${statusLabel(data.status)}</span>
       <div class="file-actions">
+        <button class="file-action-btn" title="Download" onclick="downloadFile('${id}')">⬇️</button>
         <button class="file-action-btn" title="Details & Comments" onclick="openFileDetail('${id}')">💬</button>
         ${canDelete ? '<button class="file-action-btn danger" title="Delete" onclick="deleteFile(\'' + id + '\')">🗑️</button>' : ''}
-      </div>
+      </div>`;
     </div>`;
 }
 
@@ -596,6 +596,39 @@ async function addFileComment() {
   }
 }
 
+async function downloadFile(fileId) {
+  try {
+    const doc = await db.collection('files').doc(fileId).get();
+    if (!doc.exists) return;
+    const data = doc.data();
+    if (!data.storagePath) {
+      showToast('No file path found.', 'error');
+      return;
+    }
+    showToast('Generating download link...', 'info');
+    const response = await fetch(FUNCTIONS_BASE_URL + '/getDownloadUrl', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ storagePath: data.storagePath })
+    });
+    if (!response.ok) throw new Error('Failed to get download link');
+    const result = await response.json();
+    const link = document.createElement('a');
+    link.href = result.url;
+    link.download = data.fileName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    console.error('Download error:', err);
+    showToast('Error downloading file.', 'error');
+  }
+}
+
 async function deleteFile(fileId) {
   if (!confirm('Delete this file? This cannot be undone.')) return;
   try {
@@ -603,14 +636,14 @@ async function deleteFile(fileId) {
     const doc = await db.collection('files').doc(fileId).get();
     if (doc.exists) {
       const data = doc.data();
-      if (data.driveFileId) {
+      if (data.storagePath) {
         await fetch(FUNCTIONS_BASE_URL + '/deleteFile', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer ' + await currentUser.getIdToken(),
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ driveFileId: data.driveFileId })
+          body: JSON.stringify({ storagePath: data.storagePath })
         });
       }
     }
