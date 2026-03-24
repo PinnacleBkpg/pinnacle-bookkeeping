@@ -242,6 +242,56 @@
   </div>
 </footer>
 
-<script src="js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyD4w3tkPzEJZx6dizAR0LJ1Wf2_xS_bkZw",
+    authDomain: "pinnacle-portal.firebaseapp.com",
+    projectId: "pinnacle-portal"
+  });
+  const contactDb = firebase.firestore();
+
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const btn = this.querySelector('.form-submit');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    contactDb.collection('contact-submissions').add({
+      name: document.getElementById('cf-name').value,
+      business_name: document.getElementById('cf-bizname').value,
+      email: document.getElementById('cf-email').value,
+      phone: document.getElementById('cf-phone').value,
+      industry: document.getElementById('cf-industry').value,
+      employees: document.getElementById('cf-employees').value,
+      message: document.getElementById('cf-message').value,
+      referral: document.getElementById('cf-how').value,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(function() {
+      btn.textContent = '✅ Message Sent!';
+      btn.style.background = '#2ecc71';
+      document.getElementById('contact-form').reset();
+      setTimeout(function() {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 4000);
+    })
+    .catch(function(err) {
+      console.error('Submit error:', err);
+      btn.textContent = '❌ Failed — try again';
+      btn.style.background = '#e74c3c';
+      setTimeout(function() {
+        btn.disabled = false;
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 3000);
+    });
+  });
+</script>
 </body>
 </html>
